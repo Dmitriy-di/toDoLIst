@@ -19,15 +19,33 @@
       </div>
     </form>
 
-    <div class="card mb-5" v-for="todo in todos" :key="todo.id">
+    <div
+      class="card mb-5"
+      v-for="todo in todos"
+      :key="todo.id"
+      :class="{ 'has-background-success-light': todo.done }"
+    >
       <div class="card-content">
         <div class="columns is-mobile is-vcentered">
           <div class="column">
-            <div class="content">{{ todo.content }}</div>
+            <div
+              :class="{ 'has-text-success line-through': todo.done }"
+              class="content"
+            >
+              {{ todo.content }}
+            </div>
           </div>
           <div class="column is-5 has-text-right">
-            <div class="button is-light">&#10004;</div>
-            <div class="button is-danger">&#10799;</div>
+            <button
+              @click="toggleDone(todo.id)"
+              :class="todo.done ? 'has-background-success-dark' : 'is-light'"
+              class="button is-light"
+            >
+              &#10004;
+            </button>
+            <button @click="deleteToDo(todo.id)" class="button is-danger">
+              &#10799;
+            </button>
           </div>
         </div>
       </div>
@@ -41,16 +59,16 @@ import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 const todos = ref([
-  //   {
-  //     id: "id1",
-  //     content: "Hello my friend!",
-  //     done: false,
-  //   },
-  //   {
-  //     id: "id2",
-  //     content: "What a wonderful world!",
-  //     done: false,
-  //   },
+  {
+    id: "id1",
+    content: "Hello my friend!",
+    done: false,
+  },
+  {
+    id: "id2",
+    content: "What a wonderful world!",
+    done: false,
+  },
 ]);
 //ref принимает значение и возвращает реактивный мутированный ref-объект с одним свойством - value
 const newtoDoContent = ref("");
@@ -64,6 +82,17 @@ const addToDo = () => {
   todos.value.unshift(newToDo);
   newtoDoContent.value = "";
 };
+
+//delete toDo
+const deleteToDo = (id) => {
+  todos.value = todos.value.filter((item) => item.id !== id);
+};
+
+//toggle Done
+const toggleDone = (id) => {
+  const index = todos.value.findIndex((todo) => todo.id === id);
+  todos.value[index].done = !todos.value[index].done;
+};
 </script>
 
 <style>
@@ -72,5 +101,8 @@ const addToDo = () => {
 .wrapper-todo {
   max-width: 400px;
   margin: 50px auto;
+}
+.line-through {
+  text-decoration: line-through;
 }
 </style>
