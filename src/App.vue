@@ -65,38 +65,47 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase";
+import { useTodos } from "@/hooks";
+//!=====================================My test
+const { todos } = useTodos();
+console.log(todos.value);
+//!=====================================
 
 // firebase ref
 const todosCollectionRef = collection(db, "todos");
 
-const todos = ref([
-  // {
-  //   id: "id1",
-  //   content: "Hello my friend!",
-  //   done: false,
-  // },
-  // {
-  //   id: "id2",
-  //   content: "What a wonderful world!",
-  //   done: false,
-  // },
-]);
+// const todos = ref([
+//   // {
+//   //   id: "id1",
+//   //   content: "Hello my friend!",
+//   //   done: false,
+//   // },
+//   // {
+//   //   id: "id2",
+//   //   content: "What a wonderful world!",
+//   //   done: false,
+//   // },
+// ]);
 
 // get todos
 onMounted(() => {
   // onSnapshot можем использовать вместо getDocs для прослушивания запроса(будет получать каждый раз новый запрос при добавлении/удалении элентов в firebase)
-  onSnapshot(todosCollectionRef, (querySnapshot) => {
-    let fbTodos = [];
-    querySnapshot.forEach((doc) => {
-      const todo = {
-        id: doc.id,
-        content: doc.data().content,
-        done: doc.data().done,
-      };
-      fbTodos.push(todo);
-    });
-    todos.value = fbTodos;
-  });
+  // onSnapshot(todosCollectionRef, (querySnapshot) => {
+  //   let fbTodos = [];
+  //   querySnapshot.forEach((doc) => {
+  //     const todo = {
+  //       id: doc.id,
+  //       content: doc.data().content,
+  //       done: doc.data().done,
+  //     };
+  //     fbTodos.push(todo);
+  //   });
+  //   todos.value = fbTodos;
+  //   console.log(todos.value);
+  //   for (let i in todos) {
+  //     console.log(i);
+  //   }
+  // });
 });
 
 //ref принимает значение и возвращает реактивный мутированный ref-объект с одним свойством - value
@@ -134,5 +143,8 @@ const toggleDone = (id) => {
 }
 .line-through {
   text-decoration: line-through;
+}
+.card {
+  margin: 15px;
 }
 </style>
