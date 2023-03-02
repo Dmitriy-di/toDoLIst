@@ -55,43 +55,73 @@
 
 <script setup>
 // import
-import { ref } from "vue";
-import { v4 as uuidv4 } from "uuid";
+import { ref, onMounted } from "vue";
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  doc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "@/firebase";
+
+// firebase ref
+const todosCollectionRef = collection(db, "todos");
 
 const todos = ref([
-  {
-    id: "id1",
-    content: "Hello my friend!",
-    done: false,
-  },
-  {
-    id: "id2",
-    content: "What a wonderful world!",
-    done: false,
-  },
+  // {
+  //   id: "id1",
+  //   content: "Hello my friend!",
+  //   done: false,
+  // },
+  // {
+  //   id: "id2",
+  //   content: "What a wonderful world!",
+  //   done: false,
+  // },
 ]);
+
+// get todos
+onMounted(() => {
+  // onSnapshot можем использовать вместо getDocs для прослушивания запроса(будет получать каждый раз новый запрос при добавлении/удалении элентов в firebase)
+  onSnapshot(todosCollectionRef, (querySnapshot) => {
+    let fbTodos = [];
+    querySnapshot.forEach((doc) => {
+      const todo = {
+        id: doc.id,
+        content: doc.data().content,
+        done: doc.data().done,
+      };
+      fbTodos.push(todo);
+    });
+    todos.value = fbTodos;
+  });
+});
+
 //ref принимает значение и возвращает реактивный мутированный ref-объект с одним свойством - value
 const newtoDoContent = ref("");
 
 const addToDo = () => {
-  const newToDo = {
-    id: uuidv4(),
+  addDoc(todosCollectionRef, {
     content: newtoDoContent.value,
-    done: false,
-  };
-  todos.value.unshift(newToDo);
+    country: false,
+  });
   newtoDoContent.value = "";
 };
 
 //delete toDo
 const deleteToDo = (id) => {
-  todos.value = todos.value.filter((item) => item.id !== id);
+  deleteDoc(doc(todosCollectionRef, id));
 };
 
 //toggle Done
 const toggleDone = (id) => {
   const index = todos.value.findIndex((todo) => todo.id === id);
-  todos.value[index].done = !todos.value[index].done;
+
+  updateDoc(doc(todosCollectionRef, id), {
+    done: !todos.value[index].done,
+  });
 };
 </script>
 
