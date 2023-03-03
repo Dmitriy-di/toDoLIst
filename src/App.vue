@@ -65,54 +65,16 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase";
-import { useTodos } from "@/hooks";
-//!=====================================My test
+import { useTodos } from "@/hooks/useTodos";
+import { useStore } from "vuex";
+
 const { todos } = useTodos();
-console.log(todos.value);
-//!=====================================
-
-// firebase ref
-const todosCollectionRef = collection(db, "todos");
-
-// const todos = ref([
-//   // {
-//   //   id: "id1",
-//   //   content: "Hello my friend!",
-//   //   done: false,
-//   // },
-//   // {
-//   //   id: "id2",
-//   //   content: "What a wonderful world!",
-//   //   done: false,
-//   // },
-// ]);
-
-// get todos
-onMounted(() => {
-  // onSnapshot можем использовать вместо getDocs для прослушивания запроса(будет получать каждый раз новый запрос при добавлении/удалении элентов в firebase)
-  // onSnapshot(todosCollectionRef, (querySnapshot) => {
-  //   let fbTodos = [];
-  //   querySnapshot.forEach((doc) => {
-  //     const todo = {
-  //       id: doc.id,
-  //       content: doc.data().content,
-  //       done: doc.data().done,
-  //     };
-  //     fbTodos.push(todo);
-  //   });
-  //   todos.value = fbTodos;
-  //   console.log(todos.value);
-  //   for (let i in todos) {
-  //     console.log(i);
-  //   }
-  // });
-});
 
 //ref принимает значение и возвращает реактивный мутированный ref-объект с одним свойством - value
 const newtoDoContent = ref("");
 
 const addToDo = () => {
-  addDoc(todosCollectionRef, {
+  addDoc(collection(db, "todos"), {
     content: newtoDoContent.value,
     country: false,
   });
@@ -121,14 +83,14 @@ const addToDo = () => {
 
 //delete toDo
 const deleteToDo = (id) => {
-  deleteDoc(doc(todosCollectionRef, id));
+  deleteDoc(doc(collection(db, "todos"), id));
 };
 
 //toggle Done
 const toggleDone = (id) => {
   const index = todos.value.findIndex((todo) => todo.id === id);
 
-  updateDoc(doc(todosCollectionRef, id), {
+  updateDoc(doc(collection(db, "todos"), id), {
     done: !todos.value[index].done,
   });
 };

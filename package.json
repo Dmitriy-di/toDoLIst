@@ -10,7 +10,8 @@
   "dependencies": {
     "bulma": "^0.9.4",
     "firebase": "^9.17.1",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
