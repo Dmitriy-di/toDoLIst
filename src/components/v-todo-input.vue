@@ -19,7 +19,7 @@
 <script>
 // import
 import { ref } from "vue";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, limit } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
@@ -31,6 +31,7 @@ export default {
       addDoc(collection(db, "todos"), {
         content: newtoDoContent.value,
         done: false,
+        data: Date.now(),
       });
       newtoDoContent.value = "";
     };

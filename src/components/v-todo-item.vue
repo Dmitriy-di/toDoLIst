@@ -44,6 +44,7 @@ export default {
   setup() {
     const store = useStore();
     const todos = computed(() => store.getters.TODOS);
+
     //toggle Done
     const toggleDone = (id) => {
       const index = todos.value.findIndex((todo) => todo.id === id);
@@ -52,10 +53,12 @@ export default {
         done: !todos.value[index].done,
       });
     };
+
     //delete toDo
     const deleteToDo = (id) => {
       deleteDoc(doc(collection(db, "todos"), id));
     };
+
     onMounted(() => store.dispatch("GET_TODOS"));
     return {
       todos,

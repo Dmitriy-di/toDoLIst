@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "@/firebase";
 import { ref } from "vue";
 
@@ -15,8 +15,13 @@ export default createStore({
 	actions: {
 		GET_TODOS({ commit, state }) {
 			const fetching = async () => {
+				const todoCollectionRef = collection(db, "todos");
+				const todoCollectionQuery = query(
+					todoCollectionRef,
+					orderBy("data", "desc"),
+				);
 				try {
-					await onSnapshot(collection(db, "todos"), (querySnapshot) => {
+					await onSnapshot(todoCollectionQuery, (querySnapshot) => {
 						let fbTodos = [];
 						querySnapshot.forEach((doc) => {
 							const todo = {
